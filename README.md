@@ -5,5 +5,5 @@
 3- in server folder run node index.js
 4- in client/src folder run npm start
 5- Bruno's test 
-
+6- braking the code - hahahaha
 This app uses: express, mongoDB/mongoose, and React
