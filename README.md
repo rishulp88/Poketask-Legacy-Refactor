@@ -4,6 +4,12 @@
 2- run npm i on both client and server folders
 3- in server folder run node index.js
 4- in client/src folder run npm start
-
+Hi rishul, how are you doin?
 This app uses: express, mongoDB/mongoose, and React
 
+
+
+
+
+
+sundayyyyy morninnggg
