@@ -30,6 +30,7 @@ const Register = (props) => {
     const { firstName, email, password } = state;
     const user = { firstName, email, password };
     const res = await apiService.register(user);
+    console.log(res)
     if (res.error) {
 
       alert(`${res.message}`);

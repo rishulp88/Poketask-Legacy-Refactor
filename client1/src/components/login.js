@@ -22,10 +22,13 @@ const Login = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     const { email, password } = state;
     const user = { email, password };
+    
     const res = await apiService.login(user);
     if (res.error){
+      
       alert(`${res.message}`);
       setState(initialState);
     } else {
