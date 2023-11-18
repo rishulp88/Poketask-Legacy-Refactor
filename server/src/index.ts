@@ -1,22 +1,26 @@
-const express = require('express');
-const router = require('./router');
-const cors = require('cors');
-const session = require('express-session');
-const bodyparser = require('body-parser')
-const { MongoParseError } = require('mongodb');
-const SECRET = process.env.SECRET || 'this is not very secure';
+//@ts-nocheck
+
+import express from 'express';
+import cors from 'cors';
+import session from 'express-session';
+import bodyParser from 'body-parser';
+
+import {router} from './router';
+
+import { MongoParseError } from 'mongodb';
+
+const SECRET: string = process.env.SECRET || 'this is not very secure';
 
 const app = express();
-const port = 3009;
+const port: number = 3009;
 
 const corsConfig = {
     origin: 'http://localhost:3000',
     credentials: true,
 };
 
-
 app.use(cors(corsConfig));
-app.use(bodyparser.json())
+app.use(bodyParser.json())
 app.use(express.json());
 app.use(
   session({

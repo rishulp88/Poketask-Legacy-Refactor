@@ -1,10 +1,28 @@
-const bcrypt = require('bcryptjs');
-const {User} = require('../models/db');
+import bcrypt from 'bcryptjs';
+import { User as UserModel } from '../models/db';
+import { Request, Response } from 'express';
+import { SessionData, Session } from 'express-session';
+import { Types } from 'mongoose';
 
+interface UserDocument {
+  _id: Types.ObjectId;
+  password: string;
+  points: number;
+  tasks: any[];
+}
 
-const create = async (req, res) => {
+interface SessionWithUid extends Session {
+  uid: string;
+}
+
+interface RequestWithSession extends Request {
+  session: SessionWithUid;
+  user: UserDocument;
+}
+
+const create = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email: email });
+  const user = await UserModel.findOne({ email: email });
   if (user)
     return res
       .status(409)
@@ -12,14 +30,14 @@ const create = async (req, res) => {
   try {
     if (password === '') throw new Error();
     const hash = await bcrypt.hash(password, 10);
-    const newUser = new User({
+    const newUser = new UserModel({
       ...req.body,
       password: hash,
       points: 0,
       tasks: [],
     });
     const user = await newUser.save();
-    req.session.uid = user._id;
+    (req as RequestWithSession).session.uid = user._id.toString();
     res.status(201).send(user);
   } catch (error) {
     console.log(error)
@@ -27,13 +45,14 @@ const create = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
+const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email: email });
+    const user = await UserModel.findOne({ email: email });
+    if (!user) throw new Error();
     const validatedPass = await bcrypt.compare(password, user.password);
     if(!validatedPass) throw new Error();
-    req.session.uid = user._id;
+    (req as RequestWithSession).session.uid = user._id.toString();
     res.status(200).send(user);
   } catch (error) {
     res
@@ -42,8 +61,8 @@ const login = async (req, res) => {
   };
 }
 
-const logout = (req, res) => {
-  req.session.destroy((error) => {
+const logout = (req: Request, res: Response) => {
+  (req as RequestWithSession).session.destroy((error: Error) => {
     if (error) {
       res
         .status(500)
@@ -55,9 +74,9 @@ const logout = (req, res) => {
   })
 }
 
-const profile = async (req, res) => {
+const profile = async (req: Request, res: Response) => {
   try {
-    const user = req.user;
+    const user = (req as RequestWithSession).user;
     const tasks = await user.tasks;
     res.status(200).send(tasks);
   } catch (error) {
@@ -67,13 +86,12 @@ const profile = async (req, res) => {
   }
 }
 
-const getPoints = async (req, res) => {
+const getPoints = async (req: Request, res: Response) => {
   try {
-    const user = req.user;
+    const user = (req as RequestWithSession).user;
     const points = [user.points];
     res.status(200).send(points);
   } catch (error) {
-
     console.log(error)
     const status =  500;
     res
@@ -82,5 +100,4 @@ const getPoints = async (req, res) => {
   }
 }
 
-
-module.exports = { create, login, logout, profile, getPoints };
+export { logout, profile, getPoints,login,create };
