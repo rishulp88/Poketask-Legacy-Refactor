@@ -1,7 +1,18 @@
 import mongoose, { Schema, model, connect } from 'mongoose';
 
 // Connection to mongoose
-connect('mongodb://127.0.0.1:27017/soloproject');
+
+async function connection(){
+  try {
+    const connectdb = await connect('mongodb://127.0.0.1:27017/soloproject');
+    console.log("connected to database")
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+connection()
+
 
 // Interface for user
 interface IUser {
