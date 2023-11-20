@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
-import apiService from './../apiService';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
+import apiService from '../apiService';
 import { useNavigate } from 'react-router-dom';
 
+interface Task {
+  index: number;
+  text: string;
+  done: boolean;
+}
 
+interface AddTaskProps {
+  tasks: Task[];
+  setTasks: (tasks: Task[]) => void;
+}
 
-export default function AddTask({tasks, setTasks }){
+interface State {
+  task?: string;
+}
+
+const AddTask: React.FC<AddTaskProps> = ({tasks, setTasks }) => {
   let navigate = useNavigate();
-  const [state, setState] = useState('');
-  const handleChange = (e) => {
+  const [state, setState] = useState<State>({});
+  
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setState((prevState) => ({
       ...prevState,
@@ -15,27 +29,24 @@ export default function AddTask({tasks, setTasks }){
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
+  
     const newTasks = [];
     for(let task of Object.values(tasks)){
       newTasks.push(task)
     }
-
+  
     const index = newTasks.length;
     const newTask = {index: index, text: state.task, done: false};
     const res = await apiService.addTask(newTask);
-
+  
     if (res.error) {
       alert(`${res.message}`);
-      setState('');
+      setState({});
     } else {
       const userInfo = await apiService.profile();
-      setTasks((prevstate) => ({
-        ...prevstate,
-        ...userInfo
-      }));
+      setTasks(userInfo);
       navigate('/profile');
     }
   }
@@ -65,3 +76,5 @@ export default function AddTask({tasks, setTasks }){
     </section>
   )
 }
+
+export default AddTask;

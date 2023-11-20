@@ -5,9 +5,11 @@ import auth from './auth';
 import Dashboard from './components/dashboard';
 
 
-function App() {
+
+
+const App: React.FC = () => {
   const initialState = auth.isAuthenticated();
-  const [isAuthenticated, setIsAuthenticated] = useState(initialState);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(initialState);
 
   return (
     <div className="App">

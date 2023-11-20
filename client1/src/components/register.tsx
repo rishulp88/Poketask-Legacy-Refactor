@@ -1,21 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import auth from '../auth';
-
-import apiService from '../apiService'
+import apiService from '../apiService';
 import { useNavigate, Link } from 'react-router-dom';
 import './register-page.css';
 
-const initialState = {
+interface User {
+  email: string;
+  password: string;
+  firstName: string;
+}
+
+interface RegisterProps {
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
+}
+
+const initialState: User = {
   email: '',
   password: '',
   firstName: '',
 };
 
-const Register = (props) => {
+const Register: React.FC<RegisterProps> = (props) => {
   const navigate = useNavigate();
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState<User>(initialState);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setState((prevState) => ({
       ...prevState,
@@ -23,21 +32,17 @@ const Register = (props) => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
 
     const { firstName, email, password } = state;
     const user = { firstName, email, password };
-    console.log(user)
     const res = await apiService.register(user);
     
     if (res.error) {
-
       alert(`${res.message}`);
       setState(initialState);
     } else {
-      // This sets isAuthenticated = true and redirects to profile
       props.setIsAuthenticated(true);
       auth.login(() => navigate('/profile'));
     }
@@ -51,7 +56,7 @@ const Register = (props) => {
 
   return (
     <section className='container main'>
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=VT323"></link>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=VT323"></link>
 
       <h2 className='h2'>Register</h2>
       <form className="form" onSubmit={handleSubmit}>
@@ -81,9 +86,7 @@ const Register = (props) => {
         </button>
       </form>
       <Link to="/login" className='add-task login' >Login</Link>
-
     </section>
-
   );
 };
 

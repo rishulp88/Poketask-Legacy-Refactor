@@ -4,7 +4,11 @@ import apiService from './../apiService';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-const Logout = (props) => {
+interface LogoutProps {
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
+}
+
+const Logout: React.FC<LogoutProps> = (props) => {
   let navigate = useNavigate();
   const handleClick = () => {
       apiService.logout();
@@ -22,10 +26,9 @@ const Logout = (props) => {
       <Link to="/">
         <button className='confirm-btn'>No</button>
       </Link>
-      <button className='confirm-btn' onClick={() => handleClick()}>Yes</button>
+      <button className='confirm-btn' onClick={handleClick}>Yes</button>
     </div>
   )
-
 }
 
 export default Logout;

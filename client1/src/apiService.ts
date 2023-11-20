@@ -1,27 +1,35 @@
 const BASE_URL = 'http://localhost:3009';
 
+interface ApiService {
+  register: (user: any) => Promise<any>;
+  login: (user: any) => Promise<any>;
+  logout: () => Promise<any>;
+  profile: () => Promise<any>;
+  addTask: (task: any) => Promise<any>;
+  remove: (task: any) => Promise<any>;
+  check: (task: any) => Promise<any>;
+  getUserPoints: () => Promise<any>;
+  getTaskStatus: (task: any) => Promise<any>;
+}
 
-const apiService = {};
-
-apiService.register = (user) => {
-  return fetch(`http://localhost:3009/register`, {
-    method: 'POST',
-    credentials: 'include',
-    mode: 'cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(user),
-  })
-    .then((res) => {
-      return res.text();
+const apiService: ApiService = {
+  register: (user) => {
+    return fetch(`${BASE_URL}/register`, {
+      method: 'POST',
+      credentials: 'include',
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user),
     })
-    .then((text) => {
-      return JSON.parse(text);
-    })
-    .catch((err) => {console.log('Error during fetch:', err);
-    throw err});
-};
-
-apiService.login = (user) => {
+      .then((res) => res.text())
+      .then((text) => JSON.parse(text))
+      .catch((err) => {
+        console.log('Error during fetch:', err);
+        throw err;
+      });
+  },
+  
+login: (user) => {
   return fetch(`${BASE_URL}/login`, {
     method: 'POST',
     credentials: 'include',
@@ -36,9 +44,9 @@ apiService.login = (user) => {
     return JSON.parse(text);
   })
     .catch((err) => console.log(err));
-};
+},
 
-apiService.logout = () => {
+logout: () => {
   return fetch(`${BASE_URL}/logout`, {
     method: 'POST',
     credentials: 'include',
@@ -47,9 +55,9 @@ apiService.logout = () => {
   })
     .then((res) => res.json())
     .catch((err) => console.log(err));
-}
+},
 
-apiService.profile = () => {
+profile: () => {
   return fetch(`${BASE_URL}/me`, {
     method: 'GET',
     credentials: 'include',
@@ -63,9 +71,9 @@ apiService.profile = () => {
       return JSON.parse(text);
     })
       .catch((err) => console.log('api error profile ' ,err));
-}
+},
 
-apiService.addTask = (task)=> {
+addTask: (task)=> {
   return fetch(`${BASE_URL}/addTask`, {
     method: 'POST',
     credentials: 'include',
@@ -77,9 +85,8 @@ apiService.addTask = (task)=> {
     return res.text();
   })
    .catch((err) => console.log(err));
-}
-
-apiService.remove = async (task) => {
+},
+remove: (task) => {
   return fetch(`${BASE_URL}/remove`, {
     method: 'POST',
     credentials: 'include',
@@ -92,9 +99,9 @@ apiService.remove = async (task) => {
   }
   )
   .catch((err) => console.log(err));
-}
+},
 
-apiService.check = async (task) => {
+check: (task) => {
   return fetch(`${BASE_URL}/check`, {
     method: 'POST',
     credentials: 'include',
@@ -107,9 +114,9 @@ apiService.check = async (task) => {
   }
   )
   .catch((err) => console.log(err));
-}
+},
 
-apiService.getUserPoints = async () => {
+getUserPoints: () => {
   return fetch(`${BASE_URL}/points`, {
     method: 'GET',
     credentials: 'include',
@@ -121,9 +128,9 @@ apiService.getUserPoints = async () => {
       return res.json();
     })
       .catch((err) => console.log('api error profile ' ,err));
-}
+},
 
-apiService.getTaskStatus = async (task) => {
+getTaskStatus: (task) => {
   return fetch(`${BASE_URL}/isChecked`, {
     method: 'POST',
     credentials: 'include',
@@ -137,6 +144,7 @@ apiService.getTaskStatus = async (task) => {
   )
   .catch((err) => console.log(err));
 }
+};
 
 
 export default apiService;

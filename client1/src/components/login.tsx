@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import auth from '../auth';
 import apiService from '../apiService';
 import { useNavigate } from 'react-router-dom';
 
-const initialState = {
+interface User {
+  email: string;
+  password: string;
+}
+
+interface LoginProps {
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
+}
+
+const initialState: User = {
   email: '',
   password: '',
 };
 
-const Login = (props) => {
+const Login: React.FC<LoginProps> = (props) => {
   let navigate = useNavigate();
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState<User>(initialState);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setState((prevState) => ({
       ...prevState,
@@ -20,7 +29,7 @@ const Login = (props) => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
     const { email, password } = state;
@@ -29,7 +38,6 @@ const Login = (props) => {
     const res = await apiService.login(user);
  
     if (res.error){
-      
       alert(`${res.message}`);
       setState(initialState);
     } else {

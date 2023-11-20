@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import apiService from '../apiService';
 import Register from './register';
@@ -7,11 +7,19 @@ import Logout from './logout';
 import Profile from './profile';
 import AddTask from './add-task';
 
+interface Task {
+  index: number;
+  text: string;
+  done: boolean;
+}
 
+interface DashboardProps {
+  setIsAuthenticated: (value: boolean) => void;
+}
 
-const Dashboard = ({ setIsAuthenticated }) => {
-  const [tasks, setTasks] = useState([]);
-
+const Dashboard: React.FC<DashboardProps> = ({ setIsAuthenticated }) => {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [checked, setChecked] = useState<boolean>(false);
 
 
   useEffect(() => {
@@ -36,8 +44,8 @@ const Dashboard = ({ setIsAuthenticated }) => {
       <Routes>
         <Route
           path="/"
-            element={<Register setIsAuthenticated={setIsAuthenticated} />}
-          />
+          element={<Register setIsAuthenticated={setIsAuthenticated} />}
+        />
         <Route
           path="/login"
           element={<Login setIsAuthenticated={setIsAuthenticated} />}
@@ -46,7 +54,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
           path="/logout"
           element={<Logout setIsAuthenticated={setIsAuthenticated} />}
         />
-        <Route path="/profile" element={<Profile tasks={tasks} setTasks={setTasks}  />} />
+        <Route path="/profile" element={<Profile tasks={tasks} setTasks={setTasks} checked={checked} setChecked={setChecked} />} />
         <Route path="/addTask" element={< AddTask tasks={tasks} setTasks={setTasks}  />} />
       </Routes>
     </div>
