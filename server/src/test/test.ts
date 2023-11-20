@@ -1,7 +1,7 @@
 import  request from "supertest";
 import { app } from "../index";
 
-
+/// testing
 ////User registration: test1 - creating user that doesnt exist,
 /// User registration: test2 - try to create a user that already exists
 /// Test user: {firstName: 'test', email: 'test@gmail.com', password: 'test'}
