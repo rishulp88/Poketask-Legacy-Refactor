@@ -27,6 +27,7 @@ const Login = (props) => {
     const user = { email, password };
     
     const res = await apiService.login(user);
+ 
     if (res.error){
       
       alert(`${res.message}`);

@@ -10,9 +10,16 @@ interface RequestWithUser extends Request {
   user: User;
 }
 
+const test = async (req:Request, res:Response) => {
+  const multiply = req.body.value;
+  const total = multiply * 2;
+  res.json(total);
+}
+
 const add = async (req: Request, res: Response): Promise<void> => {
   try {
     const task = req.body;
+    console.log(task)
     const user = (req as RequestWithUser).user;
     const tasks = await user.tasks;
     tasks.push(task);
@@ -27,6 +34,7 @@ const add = async (req: Request, res: Response): Promise<void> => {
 const remove = async(req: Request, res: Response): Promise<void> => {
   try {
     const taskToRemove = req.body;
+    console.log(taskToRemove)
     let id = taskToRemove.index;
     const user = (req as RequestWithUser).user;
     const tasks = await user.tasks;
@@ -49,6 +57,7 @@ const remove = async(req: Request, res: Response): Promise<void> => {
 const check = async (req: Request, res: Response): Promise<void> => {
   try {
     const taskToCheck = req.body;
+ 
     let id = taskToCheck.index;
     const user = (req as RequestWithUser).user;
     const tasks = await user.tasks;
@@ -69,7 +78,7 @@ const check = async (req: Request, res: Response): Promise<void> => {
       }
     }
     user.save();
-    res.status(201).send(taskChecked);
+    res.status(200).send(taskChecked);
   } catch (error: any) {
     console.log(error)
     res.status(500).send({error, message: 'could not check task'});
@@ -90,11 +99,12 @@ const isChecked = async (req: Request, res: Response): Promise<void> => {
         result = check;
       }
     }
-    res.status(200).send(result);
+    
+    res.status(201).send(result);
   } catch (error: any) {
     console.log(error)
     res.status(500).send({error, message: 'could not check task'});
   }
 }
 
-export { isChecked, check, remove, add };
+export { isChecked, check, remove, add ,test };
